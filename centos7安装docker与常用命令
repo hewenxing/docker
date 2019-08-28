@@ -1,0 +1,80 @@
+安装docker
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+sudo yum-config-manager --enable docker-ce-edge
+sudo yum-config-manager --enable docker-ce-test
+sudo yum install docker-ce -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo docker run hello-world
+安装特定版本的Docker CE
+yum list docker-ce --showduplicates|sort -r
+yum install docker-ce-<VERSION STRING>
+
+sudo yum install --setopt=obsoletes=0 \
+     docker-ce-17.03.2.ce \
+     docker-ce-selinux-17.03.2.ce
+
+安装Docker Compose
+yum -y install docker-compose
+升级
+docker-compose migrate-to-labels
+卸载
+rm /usr/local/bin/docker-compose
+
+docker常用命令
+
+停止所有的container，这样才能够删除其中的images：
+docker stop $(docker ps -a -q)
+
+删除全部image
+docker rmi $(docker images -q)
+
+查看运行容器
+docker ps
+
+查看所有容器
+docker ps -a
+
+进入容器
+其中字符串为容器ID:
+docker exec -it d27bd3008ad9 /bin/bash
+
+停用全部运行中的容器:
+docker stop $(docker ps -q)
+
+删除全部容器：
+docker rm $(docker ps -aq)
+
+一条命令实现停用并删除容器：
+docker stop $(docker ps -q) & docker rm $(docker ps -aq)
+
+将容器打包成镜像
+docker commit -a "runoob.com" -m "my apache" 容器名称或id 打包的镜像名称:标签 
+OPTIONS说明： 
+-a :提交的镜像作者； 
+-c :使用Dockerfile指令来创建镜像； 
+-m :提交时的说明文字； 
+-p :在commit时，将容器暂停
+
+实时查看docker容器日志
+sudo docker logs -f -t --tail 行数 容器名
+实时查看docker容器名为s12的最后10行日志
+sudo docker logs -f -t --tail 10 s12
+
+
+
+
+
